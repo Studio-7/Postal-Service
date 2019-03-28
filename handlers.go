@@ -32,11 +32,15 @@ func guessImageMimeTypes(r io.Reader) string {
 
 func createPost(w http.ResponseWriter, r *http.Request) {
 	var jsonString string
+	var imgloc string
+	var success bool
+
 	r.ParseMultipartForm(10 << 20)
 	username := r.FormValue("username")
 	title := r.FormValue("title")
 	message := r.FormValue("message")
 	tags := r.FormValue("hashtags")
+	// travelcapsule := r.FormValue("travelcapsule")
 
 	hashtags := strings.Split(tags, ",")
 
@@ -44,29 +48,32 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Error Retrieving the File")
 		fmt.Println(err)
-		return
-	}
-	defer file.Close()
+		imgloc = ""
+	} else {
+		format := guessImageMimeTypes(file)
+		timestamp := strconv.FormatInt(time.Now().UTC().UnixNano(), 10)
 
-	format := guessImageMimeTypes(file)
-	timestamp := strconv.FormatInt(time.Now().UTC().UnixNano(), 10)
+		tempFile, err := os.OpenFile("./temp-images/upload-"+timestamp+format, os.O_RDWR|os.O_CREATE, 0755)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer tempFile.Close()
 
-	tempFile, err := os.OpenFile("./temp-images/upload-"+timestamp+format, os.O_RDWR|os.O_CREATE, 0755)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer tempFile.Close()
+		fileBytes, err := ioutil.ReadAll(file)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Println(err)
+		tempFile.Write(fileBytes)
+		imgloc = tempFile.Name() + format
+		fmt.Println("Non empty file")
 	}
-	// write this byte array to our temporary file
-	tempFile.Write(fileBytes)
-	imgloc := tempFile.Name() + format
-	fmt.Println(imgloc)
-	// return that we have successfully uploaded our file!
-	if utils.CreatePost(title, message, imgloc, hashtags, username, Session) {
+
+	fmt.Println("IMGLOC: "+imgloc)
+
+	success = utils.CreatePost(title, message, imgloc, hashtags, username, Session)
+
+	if success {
 		jsonString = `{ "result": "successfully uploaded", "token": "` + utils.GenerateJWT(username, Session) + "\" }"
 	} else {
 		jsonString = `{ "error": "could not create post", "token": "` + utils.GenerateJWT(username, Session) + "\" }"
