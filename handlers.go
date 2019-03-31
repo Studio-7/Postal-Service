@@ -33,14 +33,15 @@ func guessImageMimeTypes(r io.Reader) string {
 func createPost(w http.ResponseWriter, r *http.Request) {
 	var jsonString string
 	var imgloc string
-	var success bool
+	var success string
+	w.Header().Set("Content-Type", "application/json")
 
 	r.ParseMultipartForm(10 << 20)
 	username := r.FormValue("username")
 	title := r.FormValue("title")
 	message := r.FormValue("message")
 	tags := r.FormValue("hashtags")
-	// travelcapsule := r.FormValue("travelcapsule")
+	travelcapsule := r.FormValue("travelcapsule")
 
 	hashtags := strings.Split(tags, ",")
 
@@ -66,19 +67,35 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 
 		tempFile.Write(fileBytes)
 		imgloc = tempFile.Name() + format
-		fmt.Println("Non empty file")
+		// fmt.Println("Non empty file")
 	}
 
-	fmt.Println("IMGLOC: "+imgloc)
+	// fmt.Println("IMGLOC: "+imgloc)
 
-	success = utils.CreatePost(title, message, imgloc, hashtags, username, Session)
+	success = utils.CreatePost(travelcapsule, title, message, imgloc, hashtags, username, Session)
 
-	if success {
-		jsonString = `{ "result": "successfully uploaded", "token": "` + utils.GenerateJWT(username, Session) + "\" }"
+	if success != "" {
+		jsonString = `{ "result": "successfully uploaded", "token": "` + utils.GenerateJWT(username, Session) + "\", \"travelcapsule\" : \"" + success + "\" }"
 	} else {
 		jsonString = `{ "error": "could not create post", "token": "` + utils.GenerateJWT(username, Session) + "\" }"
 	}
 
 	w.Write([]byte(jsonString))
 
+}
+
+func likePost(w http.ResponseWriter, r *http.Request) {
+	var jsonString string
+	r.ParseForm()
+	w.Header().Set("Content-Type", "application/json")
+	username := r.Form.Get("username")
+	postId := r.Form.Get("postid")
+
+	if utils.LikePost(postId, username, Session) {
+		jsonString = `{ "result": "liked", "token": "` + utils.GenerateJWT(username, Session) + "\"}"
+	} else {
+		jsonString = `{ "error": "could not like", "token": "` + utils.GenerateJWT(username, Session) + "\" }"
+	}
+
+	w.Write([]byte(jsonString))
 }
