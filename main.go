@@ -30,5 +30,6 @@ func main() {
 	port := ":" + os.Getenv("PORT")
 	http.HandleFunc("/post/createpost", utils.AuthMiddleware(createPost, Session))
 	http.HandleFunc("/post/like", utils.AuthMiddleware(likePost, Session))
+	http.HandleFunc("/post/unlike", utils.AuthMiddleware(unlikePost, Session))
 	log.Fatal(http.ListenAndServe(port, nil))
 }

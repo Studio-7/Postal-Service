@@ -99,3 +99,19 @@ func likePost(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(jsonString))
 }
+
+func unlikePost(w http.ResponseWriter, r *http.Request) {
+	var jsonString string
+	r.ParseForm()
+	w.Header().Set("Content-Type", "application/json")
+	username := r.Form.Get("username")
+	postId := r.Form.Get("postid")
+
+	if utils.UnlikePost(postId, username, Session) {
+		jsonString = `{ "result": "unliked", "token": "` + utils.GenerateJWT(username, Session) + "\"}"
+	} else {
+		jsonString = `{ "error": "could not unlike", "token": "` + utils.GenerateJWT(username, Session) + "\" }"
+	}
+
+	w.Write([]byte(jsonString))
+}
