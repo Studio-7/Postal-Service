@@ -20,8 +20,10 @@ func main() {
 	}
 	endpoints := os.Getenv("DBURL")
 	url := strings.Split(endpoints, ",")
+	dbpass := os.Getenv("DBPASS")
 	s, err := r.Connect(r.ConnectOpts{
-		Addresses: url, // endpoint without http
+		Addresses: url,
+		Password: dbpass,
 	})
 	if err != nil {
 		log.Fatalln(err)
