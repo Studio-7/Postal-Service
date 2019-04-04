@@ -33,5 +33,6 @@ func main() {
 	http.HandleFunc("/post/createpost", utils.AuthMiddleware(createPost, Session))
 	http.HandleFunc("/post/like", utils.AuthMiddleware(likePost, Session))
 	http.HandleFunc("/post/unlike", utils.AuthMiddleware(unlikePost, Session))
+	http.HandleFunc("/post/createtravelcapsule", utils.AuthMiddleware(createTC, Session))
 	log.Fatal(http.ListenAndServe(port, nil))
 }

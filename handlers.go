@@ -115,3 +115,21 @@ func unlikePost(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(jsonString))
 }
+
+func createTC(w http.ResponseWriter, r *http.Request) {
+	var jsonString string
+	r.ParseForm()
+	w.Header().Set("Content-Type", "application/json")
+	username := r.Form.Get("username")
+	title := r.Form.Get("title")
+
+	success := utils.CreateTC(title, username, Session)
+
+	if success != "" {
+		jsonString = `{ "result": "successfully created", "token": "` + utils.GenerateJWT(username, Session) + "\", \"travelcapsule\" : \"" + success + "\" }"
+	} else {
+		jsonString = `{ "error": "could not create tc", "token": "` + utils.GenerateJWT(username, Session) + "\" }"
+	}
+
+	w.Write([]byte(jsonString))
+}
