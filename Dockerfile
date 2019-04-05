@@ -34,3 +34,4 @@ RUN go build -o main
 
 EXPOSE 8001
 RUN ls
+CMD ["./main"]
