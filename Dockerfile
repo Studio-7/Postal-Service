@@ -30,6 +30,7 @@ RUN go get github.com/cvhariharan/Utils
 WORKDIR $HOME/go/src/app
 COPY . .
 
+RUN mkdir temp-images
 RUN go build -o main
 
 EXPOSE 8001
