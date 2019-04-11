@@ -3,6 +3,7 @@
 Required
 - *token* string: JWT token
 - *username* string
+- *image* file
 - *title* string
 - *message* string
 - *hashtags* string array: List of hastags separated by comma without any spaces
