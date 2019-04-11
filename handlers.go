@@ -36,7 +36,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 	var success string
 	w.Header().Set("Content-Type", "application/json")
 
-	r.ParseMultipartForm(10 << 20)
+	r.ParseMultipartForm(32 << 20)
 	username := r.FormValue("username")
 	title := r.FormValue("title")
 	message := r.FormValue("message")
