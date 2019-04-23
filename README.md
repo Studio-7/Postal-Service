@@ -76,3 +76,22 @@ Error
 }
 The error could be "Not Authorized" in which case a jwt is not returned
 ```
+
+**Endpoint** - '/post/addcomment'  
+Required  
+- *token* string: JWT token
+- *username* string
+- *postid* string
+- *message* string
+```json
+Success
+{
+    "result": "comment added successfully",
+    "token": "am9obndpY2s=.Y2N0TnN3WU5zR1J1c3NWbWFvekZaQnNiT0ppRlFHWnM=.c3ZsaGw3cDF3bS9DYTVXdWZwNGdmdjQvVTIyZGt1MksrZXBBekV4N002OD0="
+}
+Error
+{ "error" : <ERROR>,
+  "token": <NEWTOKEN>
+}
+The error could be "Not Authorized" in which case a jwt is not returned
+```
