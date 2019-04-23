@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
+	"encoding/json"
 	"github.com/cvhariharan/Utils/utils"
 )
 
@@ -28,6 +28,29 @@ func guessImageMimeTypes(r io.Reader) string {
 		return ""
 	}
 	return mime.TypeByExtension("." + format)
+}
+
+func getpost(w http.ResponseWriter, r *http.Request) {
+	var resp interface{}
+	var resps []interface{}
+	r.ParseForm()
+	w.Header().Set("Content-Type", "application/json")
+	postids := r.Form.Get("ids")
+	simplified := r.Form.Get("simplified")
+	ids := strings.Split(postids, ",")
+	fmt.Println(ids)
+	for _, id := range ids {
+		id = strings.TrimSpace(id)
+		fmt.Println(id)
+		if simplified == "true" {
+			resp = utils.GetPost(id, true, Session)
+		} else {
+			resp = utils.GetPost(id, false, Session)
+		}
+		resps = append(resps, resp)
+	}
+	j, _ := json.Marshal(resps)
+	w.Write(j)
 }
 
 func createPost(w http.ResponseWriter, r *http.Request) {
@@ -67,10 +90,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 
 		tempFile.Write(fileBytes)
 		imgloc = tempFile.Name() + format
-		// fmt.Println("Non empty file")
 	}
-
-	// fmt.Println("IMGLOC: "+imgloc)
 
 	success = utils.CreatePost(travelcapsule, title, message, imgloc, hashtags, username, Session)
 
@@ -133,3 +153,31 @@ func createTC(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(jsonString))
 }
+
+func addComment(w http.ResponseWriter, r *http.Request) {
+	var jsonString string
+	r.ParseForm()
+	w.Header().Set("Content-Type", "application/json")
+	username := r.Form.Get("username")
+	message := r.Form.Get("message")
+	postId := r.Form.Get("postid")
+
+	if utils.AddComment(postId, username, message, Session) {
+		jsonString = `{ "result": "comment added successfully", "token": "` + utils.GenerateJWT(username, Session) + "\"}"
+	} else {
+		jsonString = `{ "error": "could not add comment", "token": "` + utils.GenerateJWT(username, Session) + "\"}"
+	}
+
+	w.Write([]byte(jsonString))
+}
+
+// func getComments(w http.ResponseWriter, r *http.Request) {
+// 	var comments interface{}
+// 	r.ParseForm()
+// 	w.Header().Set("Content-Type", "application/json")
+// 	postId := r.Form.Get("postid")
+
+// 	comments = utils.GetComments(postId, Session)
+// 	resp, _ := json.Marshal(comments)
+// 	w.Write(resp)
+// }
