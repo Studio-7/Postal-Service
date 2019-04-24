@@ -33,6 +33,7 @@ func guessImageMimeTypes(r io.Reader) string {
 func getpost(w http.ResponseWriter, r *http.Request) {
 	var resp interface{}
 	var resps []interface{}
+	username := r.Form.Get("username")
 	r.ParseForm()
 	w.Header().Set("Content-Type", "application/json")
 	postids := r.Form.Get("ids")
@@ -50,7 +51,8 @@ func getpost(w http.ResponseWriter, r *http.Request) {
 		resps = append(resps, resp)
 	}
 	j, _ := json.Marshal(resps)
-	w.Write(j)
+	jsonString := `{ "result": ` + string(j) + `, "token": "` + utils.GenerateJWT(username, Session) + "\"}"
+	w.Write([]byte(jsonString))
 }
 
 func createPost(w http.ResponseWriter, r *http.Request) {
