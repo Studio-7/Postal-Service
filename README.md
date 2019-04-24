@@ -77,6 +77,97 @@ Error
 The error could be "Not Authorized" in which case a jwt is not returned
 ```
 
+**Endpoint** - '/post/getpost'  
+Required  
+- *token* string: JWT token
+- *username* string
+- *ids* comma separted list of post ids Eg:- 917498-13313,18204-912-131,80357-28375
+```json
+Success
+{
+    "result": [
+        {
+            "comments": [
+                {
+                    "CommentBody": {
+                        "Message": "First comment",
+                        "Img": {
+                            "Link": "",
+                            "CreatedOn": "",
+                            "UploadedOn": "0001-01-01T00:00:00Z",
+                            "Manufacturer": "",
+                            "Model": ""
+                        }
+                    },
+                    "CreatedOn": "2019-04-23T21:48:03.904+05:30",
+                    "CreatedBy": "user1",
+                    "Parent": "15b64971-91aa-4bc1-9ad1-24745a97d68e",
+                    "Likes": 0
+                },
+                {
+                    "CommentBody": {
+                        "Message": "Hello",
+                        "Img": {
+                            "Link": "",
+                            "CreatedOn": "",
+                            "UploadedOn": "0001-01-01T00:00:00Z",
+                            "Manufacturer": "",
+                            "Model": ""
+                        }
+                    },
+                    "CreatedOn": "2019-04-23T21:35:52.537+05:30",
+                    "CreatedBy": "user2",
+                    "Parent": "15b64971-91aa-4bc1-9ad1-24745a97d68e",
+                    "Likes": 0
+                },
+                {
+                    "CommentBody": {
+                        "Message": "Comment",
+                        "Img": {
+                            "Link": "",
+                            "CreatedOn": "",
+                            "UploadedOn": "0001-01-01T00:00:00Z",
+                            "Manufacturer": "",
+                            "Model": ""
+                        }
+                    },
+                    "CreatedOn": "2019-04-23T21:34:22.611+05:30",
+                    "CreatedBy": "user1",
+                    "Parent": "15b64971-91aa-4bc1-9ad1-24745a97d68e",
+                    "Likes": 0
+                }
+            ],
+            "post": {
+                "Id": "15b64971-91aa-4bc1-9ad1-24745a97d68e",
+                "Title": "Post",
+                "CreatedOn": "2019-04-11T11:52:54.118Z",
+                "CreatedBy": "user4",
+                "PostBody": {
+                    "Message": "Post body",
+                    "Img": {
+                        "Link": "link to image",
+                        "CreatedOn": "",
+                        "UploadedOn": "2019-04-11T11:52:55.817Z",
+                        "Manufacturer": "",
+                        "Model": ""
+                    }
+                },
+                "Hashtags": [
+                    "#HashTag"
+                ],
+                "Likes": 0
+            }
+        }
+    ],
+    "token": "dGhvcg==.UkFqV3doVEhjdGN1QXhoeEtRRkRhRnBMU2pGYmNYb0U=.UWk0Q3NvU0xod3RCVlNrdE81aFRJY2cvTG9nb3VpOGRCZmdaWldrWTZGRT0="
+}
+Error
+{ "error" : <ERROR>,
+  "token": <NEWTOKEN>
+}
+The error could be "Not Authorized" in which case a jwt is not returned
+```
+
 **Endpoint** - '/post/addcomment'  
 Required  
 - *token* string: JWT token
