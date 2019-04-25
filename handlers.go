@@ -67,6 +67,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 	message := r.FormValue("message")
 	tags := r.FormValue("hashtags")
 	travelcapsule := r.FormValue("travelcapsule")
+	location := r.FormValue("location")
 
 	hashtags := strings.Split(tags, ",")
 
@@ -94,7 +95,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		imgloc = tempFile.Name() + format
 	}
 
-	success = utils.CreatePost(travelcapsule, title, message, imgloc, hashtags, username, Session)
+	success = utils.CreatePost(travelcapsule, title, message, imgloc, hashtags, username, location, Session)
 
 	if success != "" {
 		jsonString = `{ "result": "successfully uploaded", "token": "` + utils.GenerateJWT(username, Session) + "\", \"travelcapsule\" : \"" + success + "\" }"
