@@ -8,6 +8,7 @@ Required
 - *message* string
 - *hashtags* string array: List of hastags separated by comma without any spaces
 - *travelcapsule* string: ID of the travelcapsule  
+- *location* string: comma separated latitude, longitude Eg:- -37.813611,144.963056
 ```json
 Success
 {
